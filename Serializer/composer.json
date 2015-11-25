@@ -1,0 +1,35 @@
+{
+    "name": "botanick/serializer",
+    "type": "library",
+    "description": "To be written",
+    "keywords": [
+        "serialization",
+        "object",
+        "structure",
+        "array"
+    ],
+    "homepage": "https://github.com/Botanick/serializer",
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "Andrey \"Botanick\" Chushikin",
+            "homepage": "https://github.com/Botanick"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.9",
+        "symfony/yaml": "2.3",
+        "symfony/config": "2.3",
+        "symfony/finder": "2.3",
+        "symfony/property-access": "2.3"
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Botanick\\Serializer\\": ""
+        }
+    }
+}
