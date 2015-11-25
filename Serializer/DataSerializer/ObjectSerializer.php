@@ -90,7 +90,7 @@ class ObjectSerializer extends DataSerializer
      * @return mixed
      * @throws DataSerializerException
      */
-    protected function getConfig($data, $group)
+    public function getConfig($data, $group)
     {
         $className = get_class($data);
 
