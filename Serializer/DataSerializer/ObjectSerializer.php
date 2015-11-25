@@ -12,6 +12,7 @@ class ObjectSerializer extends DataSerializer
 {
     const PROP_EXTENDS = '$extends$';
     const PROP_GETTER = '$getter$';
+    const PROP_DEFAULT = '$default$';
 
     /**
      * @var SerializerConfigLoaderInterface
@@ -86,11 +87,10 @@ class ObjectSerializer extends DataSerializer
     /**
      * @param object $data
      * @param string $group
-     * @param array $visitedGroups To determine cycles
      * @return mixed
      * @throws DataSerializerException
      */
-    protected function getConfig($data, $group, array $visitedGroups = [])
+    protected function getConfig($data, $group)
     {
         $className = get_class($data);
 
@@ -107,6 +107,7 @@ class ObjectSerializer extends DataSerializer
         }
 
         $config = [];
+        $visitedGroups = [];
         while (true) {
             if (isset($configGroups[$group])) {
 
@@ -187,6 +188,9 @@ class ObjectSerializer extends DataSerializer
         try {
             return $this->getPropertyAccessor()->getValue($object, $getter);
         } catch (\Exception $ex) {
+            if (is_array($propOptions) && array_key_exists(self::PROP_DEFAULT, $propOptions)) {
+                return $propOptions[self::PROP_DEFAULT];
+            }
             throw new DataSerializerException(
                 sprintf(
                     'Cannot access "%s" property in class "%s". %s',
