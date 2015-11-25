@@ -102,7 +102,9 @@ class ObjectSerializer extends DataSerializer
                     'Cannot serialize class "%s". %s',
                     $className,
                     $ex->getMessage()
-                )
+                ),
+                0,
+                $ex
             );
         }
 
@@ -191,13 +193,16 @@ class ObjectSerializer extends DataSerializer
             if (is_array($propOptions) && array_key_exists(self::PROP_DEFAULT, $propOptions)) {
                 return $propOptions[self::PROP_DEFAULT];
             }
+
             throw new DataSerializerException(
                 sprintf(
                     'Cannot access "%s" property in class "%s". %s',
                     $prop,
                     get_class($object),
                     $ex->getMessage()
-                )
+                ),
+                0,
+                $ex
             );
         }
     }

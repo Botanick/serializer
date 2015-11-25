@@ -117,7 +117,9 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
                         'Unable to load config from "%s". %s',
                         $filePath,
                         $ex->getMessage()
-                    )
+                    ),
+                    0,
+                    $ex
                 );
             }
 
