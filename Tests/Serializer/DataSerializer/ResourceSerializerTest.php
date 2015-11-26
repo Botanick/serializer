@@ -18,6 +18,13 @@ class ResourceSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($supports, $serializer->supports($value));
     }
 
+    public function testSerialize()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertRegExp('~^Resource id #\d+$~', $serializer->serialize(fopen(__FILE__, 'r')));
+    }
+
     public function supportProvider()
     {
         return array(

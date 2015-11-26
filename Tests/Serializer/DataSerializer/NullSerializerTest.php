@@ -18,6 +18,14 @@ class NullSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($supports, $serializer->supports($value));
     }
 
+    public function testSerialize()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertNull($serializer->serialize(null));
+        $this->assertNull($serializer->serialize('lol this is not null!'), 'NullSerializer::serialize() should always return `null`!');
+    }
+
     public function supportProvider()
     {
         return array(
