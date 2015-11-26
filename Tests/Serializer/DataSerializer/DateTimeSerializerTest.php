@@ -51,13 +51,13 @@ class DateTimeSerializerTest extends \PHPUnit_Framework_TestCase
     public function serializeProvider()
     {
         $now = new \DateTime();
-        $once = \DateTime::createFromFormat('H:i:s d.m.Y', '17:47:45 26.11.2015', new \DateTimeZone('Europe/Moscow'));
+        $once = \DateTime::createFromFormat('H:i:s d.m.Y', '17:47:45 26.11.2015', new \DateTimeZone('UTC'));
 
         return array(
             array($now, $now->getTimestamp(), array()),
             array($now, $now->getTimestamp(), array('format' => false)),
             array($now, $now->format('Y-m-d H:i:s'), array('format' => 'Y-m-d H:i:s')),
-            array($once, 1448549265, array()),
+            array($once, 1448560065, array()),
             array($once, '2015-11-26 17:47', array('format' => 'Y-m-d H:i')),
         );
     }
