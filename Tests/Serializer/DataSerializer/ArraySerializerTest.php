@@ -10,9 +10,9 @@ class ArraySerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $value
      * @param bool $supports
-     * @dataProvider supportProvider
+     * @dataProvider supportsProvider
      */
-    public function testSupport($value, $supports)
+    public function testSupports($value, $supports)
     {
         $serializer = $this->getSerializer();
 
@@ -32,7 +32,7 @@ class ArraySerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedValue, $serializer->serialize($value));
     }
 
-    public function supportProvider()
+    public function supportsProvider()
     {
         return array(
             array(null, false),

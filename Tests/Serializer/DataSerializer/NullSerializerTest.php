@@ -9,9 +9,9 @@ class NullSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $value
      * @param bool $supports
-     * @dataProvider supportProvider
+     * @dataProvider supportsProvider
      */
-    public function testSupport($value, $supports)
+    public function testSupports($value, $supports)
     {
         $serializer = $this->getSerializer();
 
@@ -26,7 +26,7 @@ class NullSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($serializer->serialize('lol this is not null!'), 'NullSerializer::serialize() should always return `null`!');
     }
 
-    public function supportProvider()
+    public function supportsProvider()
     {
         return array(
             array(null, true),

@@ -9,9 +9,9 @@ class ResourceSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $value
      * @param bool $supports
-     * @dataProvider supportProvider
+     * @dataProvider supportsProvider
      */
-    public function testSupport($value, $supports)
+    public function testSupports($value, $supports)
     {
         $serializer = $this->getSerializer();
 
@@ -25,7 +25,7 @@ class ResourceSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('~^Resource id #\d+$~', $serializer->serialize(fopen(__FILE__, 'r')));
     }
 
-    public function supportProvider()
+    public function supportsProvider()
     {
         return array(
             array(null, false),
