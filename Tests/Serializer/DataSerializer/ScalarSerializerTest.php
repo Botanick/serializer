@@ -30,7 +30,7 @@ class ScalarSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->getSerializer($options);
 
         $serializedValue = $serializer->serialize($value);
-        $this->assertEquals($expectedValue, $serializedValue);
+        $this->assertSame($expectedValue, $serializedValue);
         $this->assertInternalType($expectedType, $serializedValue);
     }
 
