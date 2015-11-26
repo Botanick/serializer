@@ -106,7 +106,7 @@ class SerializerConfigCache
 
         list($config, $filesAndDirs) = call_user_func($createConfigCallback);
 
-        $resources = [];
+        $resources = array();
         foreach ($filesAndDirs as $fileOrDir) {
             if (is_file($fileOrDir)) {
                 $resources[] = new FileResource($fileOrDir);

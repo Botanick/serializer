@@ -69,7 +69,7 @@ class ObjectSerializer extends DataSerializer
             return null;
         }
 
-        $result = [];
+        $result = array();
 
         foreach ($config as $prop => $propOptions) {
             if ($propOptions === false) {
@@ -108,8 +108,8 @@ class ObjectSerializer extends DataSerializer
             );
         }
 
-        $config = [];
-        $visitedGroups = [];
+        $config = array();
+        $visitedGroups = array();
         while (true) {
             if (isset($configGroups[$group])) {
 

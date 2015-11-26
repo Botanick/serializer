@@ -11,7 +11,7 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
     /**
      * @var array
      */
-    private $_files = [];
+    private $_files = array();
 
     /**
      * @var SerializerConfigCache
@@ -22,7 +22,7 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
      * @param array $files
      * @param SerializerConfigCache $cache
      */
-    public function __construct(array $files = [], SerializerConfigCache $cache = null)
+    public function __construct(array $files = array(), SerializerConfigCache $cache = null)
     {
         parent::__construct();
 
@@ -89,7 +89,7 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
      */
     private function loadConfigInternal()
     {
-        $config = [];
+        $config = array();
 
         foreach ($this->getFiles() as $file) {
             if (false === $filePath = realpath($file)) {
@@ -128,9 +128,9 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
 
         parent::setConfig($config);
 
-        return [
+        return array(
             $this->getConfig(),
             $this->getFiles()
-        ];
+        );
     }
 }

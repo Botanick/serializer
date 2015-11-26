@@ -12,7 +12,7 @@ class ArraySerializer extends DataSerializer
      */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
-        $result = [];
+        $result = array();
 
         foreach ($data as $k => $v) {
             $result[$k] = $this->getSerializer()->serialize($v, $group);

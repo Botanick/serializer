@@ -28,8 +28,8 @@ class DateTimeSerializer extends DataSerializer
 
     protected function getBaseDefaultOptions()
     {
-        return [
+        return array(
             'format' => false
-        ];
+        );
     }
 }

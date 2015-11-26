@@ -13,7 +13,7 @@ class Serializer implements SerializerInterface, DataSerializersAwareInterface
     /**
      * @var DataSerializerInterface[][]
      */
-    protected $_dataSerializers = [];
+    protected $_dataSerializers = array();
     /**
      * @var bool
      */

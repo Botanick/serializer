@@ -14,7 +14,7 @@ abstract class DataSerializer implements DataSerializerInterface, SerializerAwar
     /**
      * @var array
      */
-    private $_defaultOptions = [];
+    private $_defaultOptions = array();
 
     public function __construct()
     {
@@ -47,7 +47,7 @@ abstract class DataSerializer implements DataSerializerInterface, SerializerAwar
      */
     protected function getBaseDefaultOptions()
     {
-        return [];
+        return array();
     }
 
     /**

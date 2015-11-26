@@ -10,7 +10,7 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
     /**
      * @var array
      */
-    private $_dirs = [];
+    private $_dirs = array();
 
     /**
      * @var SerializerConfigCache
@@ -21,7 +21,7 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
      * @param array $dirs
      * @param SerializerConfigCache $cache
      */
-    public function __construct(array $dirs = [], SerializerConfigCache $cache = null)
+    public function __construct(array $dirs = array(), SerializerConfigCache $cache = null)
     {
         parent::__construct();
 
@@ -88,7 +88,7 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
      */
     private function loadConfigInternal()
     {
-        $files = [];
+        $files = array();
 
         $finder = new Finder();
         foreach ($this->getDirs() as $dir) {
@@ -126,9 +126,9 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
         parent::setFiles($files);
         parent::loadConfig();
 
-        return [
+        return array(
             $this->getConfig(),
             $this->getDirs()
-        ];
+        );
     }
 }

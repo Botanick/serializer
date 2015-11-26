@@ -20,15 +20,15 @@ class NullSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function supportProvider()
     {
-        return [
-            [null, true],
-            [1, false],
-            [1.0, false],
-            ['a', false],
-            [true, false],
-            [[], false],
-            [new \stdClass(), false]
-        ];
+        return array(
+            array(null, true),
+            array(1, false),
+            array(1.0, false),
+            array('a', false),
+            array(true, false),
+            array(array(), false),
+            array(new \stdClass(), false)
+        );
     }
 
     /**

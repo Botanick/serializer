@@ -54,9 +54,9 @@ class ScalarSerializer extends DataSerializer
 
     protected function getBaseDefaultOptions()
     {
-        return [
+        return array(
             'type' => false,
             'format' => false
-        ];
+        );
     }
 }
