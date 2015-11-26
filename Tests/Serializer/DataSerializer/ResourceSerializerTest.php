@@ -2,9 +2,9 @@
 
 namespace Botanick\Serializer\Tests\Serializer\DataSerializer;
 
-use Botanick\Serializer\Serializer\DataSerializer\NullSerializer;
+use Botanick\Serializer\Serializer\DataSerializer\ResourceSerializer;
 
-class NullSerializerTest extends \PHPUnit_Framework_TestCase
+class ResourceSerializerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param mixed $value
@@ -21,22 +21,22 @@ class NullSerializerTest extends \PHPUnit_Framework_TestCase
     public function supportProvider()
     {
         return array(
-            array(null, true),
+            array(null, false),
             array(1, false),
             array(1.0, false),
             array('a', false),
             array(true, false),
             array(array(), false),
             array(new \stdClass(), false),
-            array(fopen(__FILE__, 'r'), false)
+            array(fopen(__FILE__, 'r'), true)
         );
     }
 
     /**
-     * @return NullSerializer
+     * @return ResourceSerializer
      */
     protected function getSerializer()
     {
-        return new NullSerializer();
+        return new ResourceSerializer();
     }
 }
