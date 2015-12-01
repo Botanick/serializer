@@ -66,7 +66,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             array(0, $this->once(), true, $this->once()),
             array(-100, $this->never(), true, $this->never())
         );
-        foreach ($matrix as list($priority, $expectsSupports, $supports, $expectsSerialize)) {
+        foreach ($matrix as $row) {
+            list($priority, $expectsSupports, $supports, $expectsSerialize) = $row;
             $s = $this->getMock('Botanick\\Serializer\\Serializer\\DataSerializer\\DataSerializerInterface');
             $s
                 ->expects($expectsSupports)
