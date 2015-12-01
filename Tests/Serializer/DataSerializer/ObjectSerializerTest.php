@@ -69,12 +69,10 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
         try {
             $serializer->getConfig(new SimpleClass(), 'default');
         } catch (DataSerializerException $ex) {
-            if (
-                $ex->getMessage() == 'Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Config not found.'
-                && $ex->getPrevious() === $configNotFoundException
-            ) {
-                return;
-            }
+            $this->assertEquals('Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Config not found.', $ex->getMessage());
+            $this->assertSame($configNotFoundException, $ex->getPrevious());
+
+            return;
         }
 
         $this->fail('An expected exception has not been raised.');
