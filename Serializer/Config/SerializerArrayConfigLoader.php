@@ -50,6 +50,6 @@ class SerializerArrayConfigLoader implements SerializerConfigLoaderInterface
 
     protected function loadConfig()
     {
-
+        $this->_config = array();
     }
 }
