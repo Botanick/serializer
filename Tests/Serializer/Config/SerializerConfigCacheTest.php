@@ -64,18 +64,19 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
 
         $config = array('a', 1, true);
         $called = false;
+        $dummyFile = self::$_dummyFile;
 
         $this->assertEquals(
             $config,
             $cache->getCachedConfig(
                 $type,
                 $sources,
-                function () use ($config, &$called) {
+                function () use ($config, &$called, $dummyFile) {
                     $called = true;
 
                     return array(
                         $config,
-                        array(self::$_dummyFile)
+                        array($dummyFile)
                     );
                 }
             )

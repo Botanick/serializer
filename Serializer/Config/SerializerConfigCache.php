@@ -93,7 +93,7 @@ class SerializerConfigCache
         );
 
         if ($cache->isFresh()) {
-            require_once $cache->getPath();
+            require_once method_exists($cache, 'getPath') ? $cache->getPath() : $cache;
             /** @var SerializerConfigInterface $serializerConfig */
             $serializerConfig = new $class();
             if (
