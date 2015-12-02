@@ -16,8 +16,8 @@ php:
     - hhvm
 
 env:
-    - dependencies=low
-    - dependencies=high
+    - dependencies=lowest
+    - dependencies=highest
 
 matrix:
     allow_failures:
