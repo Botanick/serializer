@@ -100,6 +100,14 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
                     )
                 );
             }
+            if (!is_file($filePath)) {
+                throw new ConfigLoadException(
+                    sprintf(
+                        'Unable to load config from "%s". Not a file.',
+                        $file
+                    )
+                );
+            }
             if (!is_readable($filePath)) {
                 throw new ConfigLoadException(
                     sprintf(
@@ -120,6 +128,14 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
                     ),
                     0,
                     $ex
+                );
+            }
+            if (!is_array($yaml)) {
+                throw new ConfigLoadException(
+                    sprintf(
+                        'Unable to load config from "%s". Bad content format.',
+                        $file
+                    )
                 );
             }
 
