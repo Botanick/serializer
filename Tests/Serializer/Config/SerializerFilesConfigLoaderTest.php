@@ -85,20 +85,24 @@ class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $that = $this;
         $configCache
             ->expects($this->once())
             ->method('getCachedConfig')
-            ->willReturnCallback(function ($type, $sources, $createConfigCallback) {
-                $this->assertNotEmpty($type);
-                $this->assertInternalType('array', $sources);
-                $this->assertEquals(2, sizeof($sources));
+            ->willReturnCallback(
+                function ($type, $sources, $createConfigCallback) use ($that) {
+                    $that->assertInternalType('string', $type);
+                    $that->assertNotEmpty($type);
+                    $that->assertInternalType('array', $sources);
+                    $that->assertEquals(2, sizeof($sources));
 
-                list($config, $filesAndDirs) = call_user_func($createConfigCallback);
-                $this->assertInternalType('array', $filesAndDirs);
-                $this->assertEquals(2, sizeof($filesAndDirs));
+                    list($config, $filesAndDirs) = call_user_func($createConfigCallback);
+                    $that->assertInternalType('array', $filesAndDirs);
+                    $that->assertEquals(2, sizeof($filesAndDirs));
 
-                return $config;
-            });
+                    return $config;
+                }
+            );
         /** @var SerializerConfigCache $configCache */
 
         $configLoader = $this->getConfigLoader(

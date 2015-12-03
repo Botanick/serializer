@@ -73,11 +73,12 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
             return;
         }
 
+        $that = $this;
         $config = $this->getCache()->getCachedConfig(
             $this->getCacheType(),
             $this->getFiles(),
-            function () {
-                return $this->loadConfigInternal();
+            function () use ($that) {
+                return $that->loadConfigInternal();
             }
         );
         $this->setConfig($config);
