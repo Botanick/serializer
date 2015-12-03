@@ -3,9 +3,9 @@
 namespace Botanick\Serializer\Tests\Serializer\Config;
 
 use Botanick\Serializer\Serializer\Config\SerializerConfigCache;
-use Botanick\Serializer\Serializer\Config\SerializerFilesConfigLoader;
+use Botanick\Serializer\Serializer\Config\SerializerDirsConfigLoader;
 
-class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
+class SerializerDirsConfigLoaderTest extends \PHPUnit_Framework_TestCase
 {
     static $_configDir;
     static $_unreadablePerms;
@@ -13,13 +13,13 @@ class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$_configDir = realpath(__DIR__ . '/../../Fixtures/config');
-        self::$_unreadablePerms = fileperms(self::$_configDir . '/bad/unreadable/unreadable.yml') & 0777;
-        chmod(self::$_configDir . '/bad/unreadable/unreadable.yml', 0000);
+        self::$_unreadablePerms = fileperms(self::$_configDir . '/bad/unreadable') & 0777;
+        chmod(self::$_configDir . '/bad/unreadable', 0000);
     }
 
     public static function tearDownAfterClass()
     {
-        chmod(self::$_configDir . '/bad/unreadable/unreadable.yml', self::$_unreadablePerms);
+        chmod(self::$_configDir . '/bad/unreadable', self::$_unreadablePerms);
     }
 
     /**
@@ -39,24 +39,6 @@ class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
         $configLoader->getConfigFor('test');
     }
 
-    public function testGetConfigForWithoutCacheException2()
-    {
-        $configLoader = $this->getConfigLoader(array(self::$_configDir . '/bad/bad_format.yml'));
-
-        $this->setExpectedExceptionRegExp(
-            'Botanick\\Serializer\\Exception\\ConfigLoadException',
-            sprintf('~^Unable to load config from "%s"\.~', preg_quote(self::$_configDir . '/bad/bad_format.yml', '~'))
-        );
-
-        try {
-            $configLoader->getConfigFor('test');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('Symfony\\Component\\Yaml\\Exception\\ParseException', $ex->getPrevious());
-
-            throw $ex;
-        }
-    }
-
     public function testGetConfigForWithCache()
     {
         $config = array('test' => array('a' => 1));
@@ -72,7 +54,7 @@ class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
         /** @var SerializerConfigCache $configCache */
 
         $configLoader = $this->getConfigLoader(
-            array(self::$_configDir . '/good/1/entity.yml', self::$_configDir . '/good/2/anotherEntity.yml'),
+            array(self::$_configDir . '/good/1', self::$_configDir . '/good/2'),
             $configCache
         );
 
@@ -106,7 +88,7 @@ class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
         /** @var SerializerConfigCache $configCache */
 
         $configLoader = $this->getConfigLoader(
-            array(self::$_configDir . '/good/1/Entity.yml', self::$_configDir . '/good/2/AnotherEntity.yml'),
+            array(self::$_configDir . '/good/1', self::$_configDir . '/good/2'),
             $configCache
         );
 
@@ -118,21 +100,20 @@ class SerializerFilesConfigLoaderTest extends \PHPUnit_Framework_TestCase
         $configDir = realpath(__DIR__ . '/../../Fixtures/config');
 
         return array(
-            array($configDir . '/bad/nonexistent.yml', sprintf('Unable to load config from "%s". File not found.', $configDir . '/bad/nonexistent.yml')),
-            array($configDir . '/bad', sprintf('Unable to load config from "%s". Not a file.', $configDir . '/bad')),
-            array($configDir . '/bad/unreadable/unreadable.yml', sprintf('Unable to load config from "%s". File is not readable.', $configDir . '/bad/unreadable/unreadable.yml')),
-            array($configDir . '/bad/not_array.yml', sprintf('Unable to load config from "%s". Bad content format.', $configDir . '/bad/not_array.yml'))
+            array($configDir . '/nonexistent', sprintf('Unable to load config from "%s". Directory not found.', $configDir . '/nonexistent')),
+            array($configDir . '/bad/bad_format.yml', sprintf('Unable to load config from "%s". Not a directory.', $configDir . '/bad/bad_format.yml')),
+            array($configDir . '/bad/unreadable', sprintf('Unable to load config from "%s". Directory is not readable.', $configDir . '/bad/unreadable'))
         );
     }
 
     /**
-     * @param array $files
+     * @param array $dirs
      * @param SerializerConfigCache $cache
-     * @return SerializerFilesConfigLoader
+     * @return SerializerDirsConfigLoader
      */
-    protected function getConfigLoader(array $files = array(), SerializerConfigCache $cache = null)
+    protected function getConfigLoader(array $dirs = array(), SerializerConfigCache $cache = null)
     {
-        $configLoader = new SerializerFilesConfigLoader($files, $cache);
+        $configLoader = new SerializerDirsConfigLoader($dirs, $cache);
 
         return $configLoader;
     }
