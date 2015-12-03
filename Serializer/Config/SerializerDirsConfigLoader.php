@@ -72,11 +72,12 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
             return;
         }
 
+        $that = $this;
         $config = $this->getCache()->getCachedConfig(
             $this->getCacheType(),
             $this->getDirs(),
-            function () {
-                return $this->loadConfigInternal();
+            function () use ($that) {
+                return $that->loadConfigInternal_public();
             }
         );
         $this->setConfig($config);
@@ -130,5 +131,13 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
             $this->getConfig(),
             $this->getDirs()
         );
+    }
+
+    /**
+     * @internal Because of PHP 5.3 closures...
+     */
+    public function loadConfigInternal_public()
+    {
+        return $this->loadConfigInternal();
     }
 }

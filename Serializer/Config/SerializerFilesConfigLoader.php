@@ -78,7 +78,7 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
             $this->getCacheType(),
             $this->getFiles(),
             function () use ($that) {
-                return $that->loadConfigInternal();
+                return $that->loadConfigInternal_public();
             }
         );
         $this->setConfig($config);
@@ -87,9 +87,8 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
     /**
      * @return array
      * @throws ConfigLoadException
-     * @internal Should be "private" but cannot because of PHP 5.3 closures
      */
-    public function loadConfigInternal()
+    private function loadConfigInternal()
     {
         $config = array();
 
@@ -150,5 +149,13 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
             $this->getConfig(),
             $this->getFiles()
         );
+    }
+
+    /**
+     * @internal Because of PHP 5.3 closures...
+     */
+    public function loadConfigInternal_public()
+    {
+        return $this->loadConfigInternal();
     }
 }
