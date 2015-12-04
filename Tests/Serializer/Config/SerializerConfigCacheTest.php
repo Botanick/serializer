@@ -11,6 +11,7 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
     protected static $_umask;
     protected static $_cacheDir;
     protected static $_dummyFile;
+    protected static $_dummyDir;
     /**
      * @var Filesystem
      */
@@ -24,7 +25,8 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
         mkdir(self::$_cacheDir, 0777, true);
         self::$_cacheDir = realpath(self::$_cacheDir);
         self::$_filesystem = new Filesystem();
-        self::$_dummyFile = realpath(__DIR__ . '/../../Fixtures/dummy_file');
+        self::$_dummyDir = realpath(__DIR__ . '/../../Fixtures/dummy_dir');
+        self::$_dummyFile = realpath(__DIR__ . '/../../Fixtures/dummy_dir/dummy_file');
         self::$_cacheClassPrefix = uniqid('AppTest');
     }
 
@@ -56,14 +58,16 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
      * @param string $type
      * @param array $sources
      * @param bool $dumpCalled
+     * @param bool $sourceIsDir
      * @dataProvider getCachedConfigProvider
      */
-    public function testGetCachedConfig($type, $sources, $dumpCalled)
+    public function testGetCachedConfig($type, $sources, $dumpCalled, $sourceIsDir)
     {
         $cache = $this->getCache($dumpCalled);
 
         $config = array('a', 1, true);
         $called = false;
+        $dummyDir = self::$_dummyDir;
         $dummyFile = self::$_dummyFile;
 
         $this->assertEquals(
@@ -71,12 +75,12 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
             $cache->getCachedConfig(
                 $type,
                 $sources,
-                function () use ($config, &$called, $dummyFile) {
+                function () use ($config, &$called, $dummyDir, $dummyFile, $sourceIsDir) {
                     $called = true;
 
                     return array(
                         $config,
-                        array($dummyFile)
+                        array($sourceIsDir ? $dummyDir : $dummyFile)
                     );
                 }
             )
@@ -90,12 +94,18 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
     public function getCachedConfigProvider()
     {
         return array(
-            array('type1', array('a', 'b'), true),
-            array('type1', array('a', 'b'), false),
-            array('type2', array('a', 'b'), true),
-            array('type2', array('a', 'b'), false),
-            array('type2', array('a', 'b', 'c'), true),
-            array('type2', array('a', 'b', 'c'), false)
+            array('type1', array('a', 'b'), true, false),
+            array('type1', array('a', 'b'), false, false),
+            array('type2', array('a', 'b'), true, false),
+            array('type2', array('a', 'b'), false, false),
+            array('type2', array('a', 'b', 'c'), true, false),
+            array('type2', array('a', 'b', 'c'), false, false),
+            array('type3', array('a', 'b'), true, true),
+            array('type3', array('a', 'b'), false, true),
+            array('type4', array('a', 'b'), true, true),
+            array('type4', array('a', 'b'), false, true),
+            array('type4', array('a', 'b', 'c'), true, true),
+            array('type4', array('a', 'b', 'c'), false, true)
         );
     }
 
