@@ -22,14 +22,15 @@ class ScalarSerializerTest extends \PHPUnit_Framework_TestCase
      * @param mixed $value
      * @param mixed $expectedValue
      * @param string $expectedType
-     * @param array $options
+     * @param array $defaultOptions
+     * @param array $serializeOptions
      * @dataProvider serializeProvider
      */
-    public function testSerialize($value, $expectedValue, $expectedType, $options)
+    public function testSerialize($value, $expectedValue, $expectedType, $defaultOptions, $serializeOptions = null)
     {
-        $serializer = $this->getSerializer($options);
+        $serializer = $this->getSerializer($defaultOptions);
 
-        $serializedValue = $serializer->serialize($value);
+        $serializedValue = $serializer->serialize($value, 'default', $serializeOptions);
         $this->assertSame($expectedValue, $serializedValue);
         $this->assertInternalType($expectedType, $serializedValue);
     }
@@ -62,6 +63,22 @@ class ScalarSerializerTest extends \PHPUnit_Framework_TestCase
             array('1a', 1, \PHPUnit_Framework_Constraint_IsType::TYPE_INT, array('type' => 'int')),
             array('man', 'Hello, man!', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array('format' => 'Hello, %s!')),
             array(1.2, '1.20', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array('format' => '%01.2f')),
+            // serialize options w/o defaults
+            array(123, '123', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array(), array('type' => 'string')),
+            array(123, '~123~', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array(), array('format' => '~%s~')),
+            // serialize options w/ defaults
+            array(123, '123', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array('type' => 'float'), array('type' => 'string')),
+            array(123, '~123~', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array('format' => '=%s='), array('format' => '~%s~')),
+            // nonexistent type
+            array(123, 123, \PHPUnit_Framework_Constraint_IsType::TYPE_INT, array('type' => 'blah')),
+            array('123', '123', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array('type' => 'blah')),
+            // non-string format
+            array(123, 123, \PHPUnit_Framework_Constraint_IsType::TYPE_INT, array('format' => 42)),
+            array('123', '123', \PHPUnit_Framework_Constraint_IsType::TYPE_STRING, array('format' => 42)),
+            // type > format
+            array('123', 123, \PHPUnit_Framework_Constraint_IsType::TYPE_INT, array('type' => 'int', 'format' => '-%s-')),
+            array('123', 123, \PHPUnit_Framework_Constraint_IsType::TYPE_INT, array('type' => 'int'), array('format' => '-%s-')),
+            array('123', 123, \PHPUnit_Framework_Constraint_IsType::TYPE_INT, array(), array('type' => 'int', 'format' => '-%s-')),
         );
     }
 
