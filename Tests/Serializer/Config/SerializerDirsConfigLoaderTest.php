@@ -22,6 +22,13 @@ class SerializerDirsConfigLoaderTest extends \PHPUnit_Framework_TestCase
         chmod(self::$_configDir . '/bad/unreadable', self::$_unreadablePerms);
     }
 
+    public function testGetConfigForWithoutCache()
+    {
+        $configLoader = $this->getConfigLoader(array(self::$_configDir . '/good/1', self::$_configDir . '/good/2'));
+
+        $this->assertSame(array('x' => 1), $configLoader->getConfigFor('Entity'));
+    }
+
     /**
      * @param string $file
      * @param string $exceptionMessage
