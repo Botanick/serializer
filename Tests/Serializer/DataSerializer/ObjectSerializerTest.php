@@ -47,6 +47,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
         $configLoader
             ->expects($this->once())
             ->method('getConfigFor')
+            ->with(get_class($value))
             ->willReturn($config);
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
@@ -54,20 +55,67 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedValue, $serializer->serialize($value, $group));
     }
 
+    /**
+     * @param array $config
+     * @param string $prop
+     * @throws \Exception
+     * @dataProvider serializeExceptionIfPropertyNotResolvedProvider
+     */
+    public function testSerializeExceptionIfPropertyNotResolved($config, $prop)
+    {
+        $obj = new SimpleClass();
+        $objClass = get_class($obj);
+
+        $serializer = $this->getSerializer();
+
+        $s = $this->getMock('Botanick\\Serializer\\SerializerInterface');
+        $s
+            ->expects($this->never())
+            ->method('serialize');
+        /** @var SerializerInterface $s */
+        $serializer->setSerializer($s);
+
+        $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
+        $configLoader
+            ->expects($this->once())
+            ->method('getConfigFor')
+            ->with($objClass)
+            ->willReturn($config);
+        /** @var SerializerConfigLoaderInterface $configLoader */
+        $serializer->setConfigLoader($configLoader);
+
+        $this->setExpectedExceptionRegExp(
+            'Botanick\\Serializer\\Exception\\DataSerializerException',
+            sprintf('~^Cannot access "%s" property in class "%s".~', preg_quote($prop, '~'), preg_quote($objClass, '~'))
+        );
+
+        try {
+            $serializer->serialize($obj);
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf('Symfony\\Component\\PropertyAccess\\Exception\\ExceptionInterface', $ex->getPrevious());
+
+            throw $ex;
+        }
+    }
+
     public function testGetConfigIfConfigNotFound()
     {
+        $obj = new SimpleClass();
+        $objClass = get_class($obj);
+
         $serializer = $this->getSerializer();
 
         $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
         $configLoader
             ->expects($this->once())
             ->method('getConfigFor')
+            ->with($objClass)
             ->willThrowException($configNotFoundException = new ConfigNotFoundException('Config not found.'));
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
 
         try {
-            $serializer->getConfig(new SimpleClass(), 'default');
+            $serializer->getConfig($obj, 'default');
         } catch (DataSerializerException $ex) {
             $this->assertEquals('Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Config not found.', $ex->getMessage());
             $this->assertSame($configNotFoundException, $ex->getPrevious());
@@ -85,12 +133,16 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetConfigIfGroupNotFound($group, $config)
     {
+        $obj = new SimpleClass();
+        $objClass = get_class($obj);
+
         $serializer = $this->getSerializer();
 
         $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
         $configLoader
             ->expects($this->once())
             ->method('getConfigFor')
+            ->with($objClass)
             ->willreturn($config);
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
@@ -100,17 +152,21 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             'Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Neither "' . $group . '" nor "default" group was found.'
         );
 
-        $serializer->getConfig(new SimpleClass(), $group);
+        $serializer->getConfig($obj, $group);
     }
 
     public function testGetConfigIfEmptyGroupIsExtended()
     {
+        $obj = new SimpleClass();
+        $objClass = get_class($obj);
+
         $serializer = $this->getSerializer();
 
         $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
         $configLoader
             ->expects($this->once())
             ->method('getConfigFor')
+            ->with($objClass)
             ->willreturn(array('test' => false, 'test1' => array('$extends$' => 'test', 'a' => null), 'test2' => array('$extends$' => 'test1', 'b' => null)));
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
@@ -120,17 +176,21 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             'Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Group cannot be extended from empty group "test", path: test2 -> test1.'
         );
 
-        $serializer->getConfig(new SimpleClass(), 'test2');
+        $serializer->getConfig($obj, 'test2');
     }
 
     public function testGetConfigIfCyclicExtensionOccured()
     {
+        $obj = new SimpleClass();
+        $objClass = get_class($obj);
+
         $serializer = $this->getSerializer();
 
         $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
         $configLoader
             ->expects($this->once())
             ->method('getConfigFor')
+            ->with($objClass)
             ->willreturn(array('test' => array('$extends$' => 'test2'), 'test1' => array('$extends$' => 'test'), 'test2' => array('$extends$' => 'test1')));
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
@@ -140,7 +200,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             'Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Cyclic groups extension found for group "test2", path: test2 -> test1 -> test.'
         );
 
-        $serializer->getConfig(new SimpleClass(), 'test2');
+        $serializer->getConfig($obj, 'test2');
     }
 
     public function supportsProvider()
@@ -182,6 +242,14 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             array($obj, array('d' => 'd'), 1, 'default', array('default' => array('d' => array('$getter$' => 'propD')))),
             // test of $default$ keyword
             array($obj, array('nonexistent' => 'hi there!'), 1, 'default', array('default' => array('nonexistent' => array('$default$' => 'hi there!')))),
+        );
+    }
+
+    public function serializeExceptionIfPropertyNotResolvedProvider()
+    {
+        return array(
+            array(array('default' => array('nonexistent' => null)), 'nonexistent'),
+            array(array('default' => array('nonexistent' => array('$getter$' => 'anothernonexistent'))), 'nonexistent')
         );
     }
 
