@@ -20,7 +20,7 @@ class SerializerConfigCacheTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$_cacheDir = sys_get_temp_dir() . '/' . uniqid();
+        self::$_cacheDir = sys_get_temp_dir() . '/' . uniqid('botanick-serializer-');
         self::$_umask = umask(0);
         mkdir(self::$_cacheDir, 0777, true);
         self::$_cacheDir = realpath(self::$_cacheDir);
