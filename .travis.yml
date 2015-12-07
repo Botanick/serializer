@@ -32,4 +32,4 @@ before_script:
     - if [ "$dependencies" = "highest" ]; then composer update --prefer-source -n; fi;
 
 script:
-    - vendor/bin/phpunit
+    - vendor/bin/phpunit --coverage-text
