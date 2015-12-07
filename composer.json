@@ -1,7 +1,7 @@
 {
     "name": "botanick/serializer",
     "type": "library",
-    "description": "To be written",
+    "description": "Library for serialization any PHP structures (scalars, objects, arrays, etc.) into PHP primitives (scalars, arrays of scalars, arrays of arrays).",
     "keywords": [
         "serialization",
         "object",
@@ -35,5 +35,10 @@
         "exclude-from-classmap": [
             "/Tests/"
         ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
     }
 }
