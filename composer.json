@@ -1,7 +1,7 @@
 {
     "name": "botanick/serializer",
     "type": "library",
-    "description": "Library for serialization any PHP structures (scalars, objects, arrays, etc.) into PHP primitives (scalars, arrays of scalars, arrays of arrays).",
+    "description": "Library for serialization of any PHP structures (scalars, objects, arrays, etc.) into PHP primitives (scalars, arrays of scalars, arrays of arrays).",
     "keywords": [
         "serialization",
         "object",
