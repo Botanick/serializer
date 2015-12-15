@@ -83,17 +83,20 @@ var_export($serializedData);
 ### Documentation
 
 - Data serializers:
-    - [NullSerializer](doc/DataSerializer/NullSerializer.md)
-    - [ScalarSerializer](doc/DataSerializer/ScalarSerializer.md)
-    - [ResourceSerializer](doc/DataSerializer/ResourceSerializer.md)
-    - [ArraySerializer](doc/DataSerializer/ArraySerializer.md)
-    - [DateTimeSerializer](doc/DataSerializer/DateTimeSerializer.md)
-    - [ObjectSerializer](doc/DataSerializer/ObjectSerializer.md)
-    - [TraversableSerializer](doc/DataSerializer/TraversableSerializer.md)
-    - [Implementing your own data serializer](doc/DataSerializer/YourOwn.md)
+    - [NullSerializer](doc/Serializer/DataSerializer/NullSerializer.md)
+    - [ScalarSerializer](doc/Serializer/DataSerializer/ScalarSerializer.md)
+    - [ResourceSerializer](doc/Serializer/DataSerializer/ResourceSerializer.md)
+    - [ArraySerializer](doc/Serializer/DataSerializer/ArraySerializer.md)
+    - [DateTimeSerializer](doc/Serializer/DataSerializer/DateTimeSerializer.md)
+    - [ObjectSerializer](doc/Serializer/DataSerializer/ObjectSerializer.md)
+    - [TraversableSerializer](doc/Serializer/DataSerializer/TraversableSerializer.md)
+    - [Implementing your own data serializer](doc/Serializer/DataSerializer/YourOwn.md)
 - Config loaders (used in `ObjectSerializer`):
     - [SerializerArrayConfigLoader](doc/Config/SerializerArrayConfigLoader.md)
     - [SerializerFilesConfigLoader](doc/Config/SerializerFilesConfigLoader.md)
     - [SerializerDirsConfigLoader](doc/Config/SerializerDirsConfigLoader.md)
     - [Config caching](doc/Config/YourOwn.md)
     - [Implementing your own config loader](doc/Config/YourOwn.md)
+- Serializer itself:
+    - [Built-in serializer](doc/Serializer/Serializer.md)
+    - [Implementing your own serializer](doc/Serializer/YourOwn.md)
