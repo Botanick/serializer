@@ -11,6 +11,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class ObjectSerializer extends DataSerializer
 {
     const PROP_EXTENDS = '$extends$';
+    const PROP_VALUE = '$value$';
     const PROP_GETTER = '$getter$';
     const PROP_DEFAULT = '$default$';
 
@@ -181,7 +182,9 @@ class ObjectSerializer extends DataSerializer
     {
         $getter = $prop;
         if (is_array($propOptions)) {
-            if (isset($propOptions[self::PROP_GETTER])) {
+            if (isset($propOptions[self::PROP_VALUE])) {
+                return $propOptions[self::PROP_VALUE];
+            } elseif (isset($propOptions[self::PROP_GETTER])) {
                 $getter = $propOptions[self::PROP_GETTER];
                 unset($propOptions[self::PROP_GETTER]);
             }

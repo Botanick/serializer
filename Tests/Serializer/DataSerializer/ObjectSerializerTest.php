@@ -238,6 +238,8 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             array($obj, array('a' => 1, 'b' => 'b', 'c' => 'c'), 3, 'test2', array('test' => array('a' => null), 'test1' => array('$extends$' => 'test', 'b' => null), 'test2' => array('$extends$' => 'test1', 'c' => null))),
             // extending with skipping
             array($obj, array('a' => 1, 'c' => 'c'), 2, 'test2', array('test' => array('a' => null), 'test1' => array('$extends$' => 'test', 'b' => null), 'test2' => array('$extends$' => 'test1', 'b' => false, 'c' => 'c'))),
+            // test of $value$ keyword
+            array($obj, array('d' => 'now U see me'), 1, 'default', array('default' => array('d' => array('$value$' => 'now U see me')))),
             // test of $getter$ keyword
             array($obj, array('d' => 'd'), 1, 'default', array('default' => array('d' => array('$getter$' => 'propD')))),
             // test of $default$ keyword
