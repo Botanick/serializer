@@ -93,20 +93,35 @@ class ObjectSerializer extends DataSerializer
      */
     public function getConfig($data, $group)
     {
-        $className = get_class($data);
+        $options = $this->mergeOptions(null);
+        $withParents = $options['parents'];
 
-        try {
-            $configGroups = $this->getConfigLoader()->getConfigFor($className);
-        } catch (ConfigNotFoundException $ex) {
-            throw new DataSerializerException(
-                sprintf(
-                    'Cannot serialize class "%s". %s',
-                    $className,
-                    $ex->getMessage()
-                ),
-                0,
-                $ex
-            );
+        $className = $configFor = get_class($data);
+
+        $firstConfigNotFoundEx = null;
+        while (true) {
+            try {
+                $configGroups = $this->getConfigLoader()->getConfigFor($configFor);
+                break;
+            } catch (ConfigNotFoundException $ex) {
+                $firstConfigNotFoundEx = $firstConfigNotFoundEx ?: $ex;
+
+                if ($withParents) {
+                    if (false !== $configFor = get_parent_class($configFor)) {
+                        continue;
+                    }
+                }
+
+                throw new DataSerializerException(
+                    sprintf(
+                        'Cannot serialize class "%s". %s',
+                        $className,
+                        $firstConfigNotFoundEx->getMessage()
+                    ),
+                    0,
+                    $firstConfigNotFoundEx
+                );
+            }
         }
 
         $config = array();
@@ -213,5 +228,12 @@ class ObjectSerializer extends DataSerializer
     public function supports($data)
     {
         return is_object($data);
+    }
+
+    protected function getBaseDefaultOptions()
+    {
+        return array(
+            'parents' => false,
+        );
     }
 }
