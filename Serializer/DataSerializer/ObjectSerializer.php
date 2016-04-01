@@ -197,7 +197,7 @@ class ObjectSerializer extends DataSerializer
     {
         $getter = $prop;
         if (is_array($propOptions)) {
-            if (isset($propOptions[self::PROP_VALUE])) {
+            if (array_key_exists(self::PROP_VALUE, $propOptions)) {
                 return $propOptions[self::PROP_VALUE];
             } elseif (isset($propOptions[self::PROP_GETTER])) {
                 $getter = $propOptions[self::PROP_GETTER];

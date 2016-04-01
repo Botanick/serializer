@@ -149,7 +149,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(
             'Botanick\\Serializer\\Exception\\DataSerializerException',
-            'Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Neither "' . $group . '" nor "default" group was found.'
+            'Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleClass". Neither "'.$group.'" nor "default" group was found.'
         );
 
         $serializer->getConfig($obj, $group);
@@ -215,7 +215,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             array(new \stdClass(), true),
             array($this->getMock('Traversable'), true),
             array($this->getMock('Botanick\\Serializer\\Serializer\\DataSerializer\\ObjectSerializer'), true),
-            array(fopen(__FILE__, 'r'), false)
+            array(fopen(__FILE__, 'r'), false),
         );
     }
 
@@ -240,6 +240,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             array($obj, array('a' => 1, 'c' => 'c'), 2, 'test2', array('test' => array('a' => null), 'test1' => array('$extends$' => 'test', 'b' => null), 'test2' => array('$extends$' => 'test1', 'b' => false, 'c' => 'c'))),
             // test of $value$ keyword
             array($obj, array('d' => 'now U see me'), 1, 'default', array('default' => array('d' => array('$value$' => 'now U see me')))),
+            array($obj, array('d' => null), 1, 'default', array('default' => array('d' => array('$value$' => null)))),
             // test of $getter$ keyword
             array($obj, array('d' => 'd'), 1, 'default', array('default' => array('d' => array('$getter$' => 'propD')))),
             // test of $default$ keyword
@@ -251,7 +252,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(array('default' => array('nonexistent' => null)), 'nonexistent'),
-            array(array('default' => array('nonexistent' => array('$getter$' => 'anothernonexistent'))), 'nonexistent')
+            array(array('default' => array('nonexistent' => array('$getter$' => 'anothernonexistent'))), 'nonexistent'),
         );
     }
 
@@ -261,7 +262,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             array('default', array()),
             array('test', array()),
             array('default', array('default1' => array(), 'test1' => array())),
-            array('test', array('default1' => array(), 'test1' => array()))
+            array('test', array('default1' => array(), 'test1' => array())),
         );
     }
 
