@@ -7,6 +7,7 @@ use Botanick\Serializer\Exception\DataSerializerException;
 use Botanick\Serializer\Serializer\Config\SerializerConfigLoaderInterface;
 use Botanick\Serializer\Serializer\DataSerializer\ObjectSerializer;
 use Botanick\Serializer\SerializerInterface;
+use Botanick\Serializer\Tests\Fixtures\SimpleChild;
 use Botanick\Serializer\Tests\Fixtures\SimpleClass;
 
 class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
@@ -150,7 +151,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getConfigFor')
             ->with($objClass)
-            ->willreturn($config);
+            ->willReturn($config);
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
 
@@ -174,7 +175,7 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getConfigFor')
             ->with($objClass)
-            ->willreturn(array('test' => false, 'test1' => array('$extends$' => 'test', 'a' => null), 'test2' => array('$extends$' => 'test1', 'b' => null)));
+            ->willReturn(array('test' => false, 'test1' => array('$extends$' => 'test', 'a' => null), 'test2' => array('$extends$' => 'test1', 'b' => null)));
         /** @var SerializerConfigLoaderInterface $configLoader */
         $serializer->setConfigLoader($configLoader);
 
@@ -208,6 +209,104 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
         );
 
         $serializer->getConfig($obj, 'test2');
+    }
+
+    public function testGetConfigIfParentsAreUsed()
+    {
+        $obj = new SimpleChild();
+        $objClass = get_class($obj);
+        $parent = new SimpleClass();
+        $parentClass = get_class($parent);
+
+        $serializer = $this->getSerializer();
+        $serializer->setDefaultOptions(array('parents' => true));
+
+        $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
+        $configLoader
+            ->expects($this->at(0))
+            ->method('getConfigFor')
+            ->with($objClass)
+            ->willThrowException(new ConfigNotFoundException('First fail'));
+        $configLoader
+            ->expects($this->at(1))
+            ->method('getConfigFor')
+            ->with($parentClass)
+            ->willReturn(array('test' => array('a' => 1)));
+        $configLoader
+            ->expects($this->exactly(2))
+            ->method('getConfigFor');
+        /** @var SerializerConfigLoaderInterface $configLoader */
+        $serializer->setConfigLoader($configLoader);
+
+        $this->assertEquals(array('a' => 1), $serializer->getConfig($obj, 'test'));
+    }
+
+    public function testGetConfigFailureIfParentsAreNotUsed()
+    {
+        $obj = new SimpleChild();
+        $objClass = get_class($obj);
+
+        $serializer = $this->getSerializer();
+        $serializer->setDefaultOptions(array('parents' => false));
+
+        $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
+        $configLoader
+            ->expects($this->once())
+            ->method('getConfigFor')
+            ->with($objClass)
+            ->willThrowException($configNotFoundException = new ConfigNotFoundException('Config not found.'));
+        /** @var SerializerConfigLoaderInterface $configLoader */
+        $serializer->setConfigLoader($configLoader);
+
+        try {
+            $serializer->getConfig($obj, 'default');
+        } catch (DataSerializerException $ex) {
+            $this->assertEquals('Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleChild". Config not found.', $ex->getMessage());
+            $this->assertSame($configNotFoundException, $ex->getPrevious());
+
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+    }
+
+    public function testGetConfigFailureIfParentsAreUsed()
+    {
+        $obj = new SimpleChild();
+        $objClass = get_class($obj);
+        $parent = new SimpleClass();
+        $parentClass = get_class($parent);
+
+        $serializer = $this->getSerializer();
+        $serializer->setDefaultOptions(array('parents' => true));
+
+        $configLoader = $this->getMock('Botanick\\Serializer\\Serializer\\Config\\SerializerConfigLoaderInterface');
+        $configLoader
+            ->expects($this->at(0))
+            ->method('getConfigFor')
+            ->with($objClass)
+            ->willThrowException($configNotFoundException = new ConfigNotFoundException('First fail.'));
+        $configLoader
+            ->expects($this->at(1))
+            ->method('getConfigFor')
+            ->with($parentClass)
+            ->willThrowException(new ConfigNotFoundException('Second fail.'));
+        $configLoader
+            ->expects($this->exactly(2))
+            ->method('getConfigFor');
+        /** @var SerializerConfigLoaderInterface $configLoader */
+        $serializer->setConfigLoader($configLoader);
+
+        try {
+            $serializer->getConfig($obj, 'default');
+        } catch (DataSerializerException $ex) {
+            $this->assertEquals('Cannot serialize class "Botanick\\Serializer\\Tests\\Fixtures\\SimpleChild". First fail.', $ex->getMessage());
+            $this->assertSame($configNotFoundException, $ex->getPrevious());
+
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
     }
 
     public function supportsProvider()
