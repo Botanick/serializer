@@ -45,6 +45,11 @@ class TraversableSerializer extends DataSerializer
         return $result;
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.traversable';
+    }
+
     public function supports($data)
     {
         if (!is_object($data)) {

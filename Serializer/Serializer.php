@@ -10,6 +10,8 @@ use Botanick\Serializer\SerializerInterface;
 
 class Serializer implements SerializerInterface, DataSerializersAwareInterface
 {
+    const OPTION_DATA_SERIALIZER = '$dataSerializer$';
+
     /**
      * @var DataSerializerInterface[][]
      */
@@ -21,9 +23,20 @@ class Serializer implements SerializerInterface, DataSerializersAwareInterface
 
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
+        $dsName = null;
+        if (is_array($options)) {
+            if (isset($options[self::OPTION_DATA_SERIALIZER])) {
+                $dsName = $options[self::OPTION_DATA_SERIALIZER];
+                unset($options[self::OPTION_DATA_SERIALIZER]);
+            }
+        }
+
         foreach ($this->getDataSerializers() as $dataSerializers) {
             foreach ($dataSerializers as $dataSerializer) {
-                if ($dataSerializer->supports($data)) {
+                if (
+                    $dsName && $dsName === $dataSerializer->getName()
+                    || $dataSerializer->supports($data)
+                ) {
                     return $dataSerializer->serialize($data, $group, $options);
                 }
             }

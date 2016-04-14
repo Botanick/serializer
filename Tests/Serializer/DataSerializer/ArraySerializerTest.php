@@ -7,6 +7,13 @@ use Botanick\Serializer\SerializerInterface;
 
 class ArraySerializerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetName()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertEquals('botanick.serializer.data-serializer.array', $serializer->getName());
+    }
+
     /**
      * @param mixed $value
      * @param bool $supports

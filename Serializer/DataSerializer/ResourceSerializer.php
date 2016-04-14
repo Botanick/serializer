@@ -15,6 +15,11 @@ class ResourceSerializer extends DataSerializer
         return (string)$data;
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.resource';
+    }
+
     public function supports($data)
     {
         return is_resource($data);

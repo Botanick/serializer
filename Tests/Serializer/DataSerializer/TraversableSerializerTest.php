@@ -10,6 +10,13 @@ use Botanick\Serializer\SerializerInterface;
 
 class TraversableSerializerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetName()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertEquals('botanick.serializer.data-serializer.traversable', $serializer->getName());
+    }
+
     /**
      * @param mixed $value
      * @param bool $supports

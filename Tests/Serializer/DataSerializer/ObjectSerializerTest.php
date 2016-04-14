@@ -11,6 +11,13 @@ use Botanick\Serializer\Tests\Fixtures\SimpleClass;
 
 class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetName()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertEquals('botanick.serializer.data-serializer.object', $serializer->getName());
+    }
+
     /**
      * @param mixed $value
      * @param bool $supports

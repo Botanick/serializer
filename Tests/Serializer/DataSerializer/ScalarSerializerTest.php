@@ -6,6 +6,13 @@ use Botanick\Serializer\Serializer\DataSerializer\ScalarSerializer;
 
 class ScalarSerializerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetName()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertEquals('botanick.serializer.data-serializer.scalar', $serializer->getName());
+    }
+
     /**
      * @param mixed $value
      * @param bool $supports

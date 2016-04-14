@@ -21,6 +21,11 @@ class DateTimeSerializer extends DataSerializer
         return $data->getTimestamp();
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.date-time';
+    }
+
     public function supports($data)
     {
         return $data instanceof \DateTime;

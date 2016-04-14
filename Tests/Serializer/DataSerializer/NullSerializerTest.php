@@ -6,6 +6,13 @@ use Botanick\Serializer\Serializer\DataSerializer\NullSerializer;
 
 class NullSerializerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetName()
+    {
+        $serializer = $this->getSerializer();
+
+        $this->assertEquals('botanick.serializer.data-serializer.null', $serializer->getName());
+    }
+
     /**
      * @param mixed $value
      * @param bool $supports

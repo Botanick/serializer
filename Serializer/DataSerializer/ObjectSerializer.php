@@ -225,6 +225,11 @@ class ObjectSerializer extends DataSerializer
         }
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.object';
+    }
+
     public function supports($data)
     {
         return is_object($data);

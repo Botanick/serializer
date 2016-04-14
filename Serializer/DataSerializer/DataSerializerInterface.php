@@ -7,6 +7,11 @@ use Botanick\Serializer\SerializerInterface;
 interface DataSerializerInterface extends SerializerInterface
 {
     /**
+     * @return string
+     */
+    public function getName();
+
+    /**
      * @param $data
      * @return bool
      */

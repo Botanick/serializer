@@ -21,6 +21,11 @@ class ArraySerializer extends DataSerializer
         return $result;
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.array';
+    }
+
     public function supports($data)
     {
         return is_array($data);

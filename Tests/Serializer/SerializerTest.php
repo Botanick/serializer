@@ -64,7 +64,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $matrix = array(
             array(100, $this->once(), false, $this->never()),
             array(0, $this->once(), true, $this->once()),
-            array(-100, $this->never(), true, $this->never())
+            array(-100, $this->never(), true, $this->never()),
         );
         foreach ($matrix as $row) {
             list($priority, $expectsSupports, $supports, $expectsSerialize) = $row;
@@ -82,6 +82,25 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertSame(null, $serializer->serialize(null));
+    }
+
+    public function testSerializerWithDataSerializerOption()
+    {
+        $serializer = $this->getSerializer();
+
+        $s = $this->getMock('Botanick\\Serializer\\Serializer\\DataSerializer\\DataSerializerInterface');
+        $s
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn('super-serializer');
+        $s
+            ->expects($this->once())
+            ->method('serialize')
+            ->willReturnArgument(0);
+        /** @var DataSerializerInterface $s */
+        $serializer->addDataSerializer($s, 0);
+
+        $this->assertSame(null, $serializer->serialize(null, 'default', array('$dataSerializer$' => 'super-serializer')));
     }
 
     public function testSerializerInjectionIntoDataSerializer()

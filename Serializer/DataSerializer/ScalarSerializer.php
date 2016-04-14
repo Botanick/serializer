@@ -47,6 +47,11 @@ class ScalarSerializer extends DataSerializer
         return $data;
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.scalar';
+    }
+
     public function supports($data)
     {
         return is_scalar($data);

@@ -15,6 +15,11 @@ class NullSerializer extends DataSerializer
         return null;
     }
 
+    public function getName()
+    {
+        return 'botanick.serializer.data-serializer.null';
+    }
+
     public function supports($data)
     {
         return is_null($data);
