@@ -103,6 +103,36 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(null, $serializer->serialize(null, 'default', array('$dataSerializer$' => 'super-serializer')));
     }
 
+    public function testSerializerWithDataSerializerOptionLowPriority()
+    {
+        $serializer = $this->getSerializer();
+
+        $s1 = $this->getMock('Botanick\\Serializer\\Serializer\\DataSerializer\\DataSerializerInterface');
+        $s1
+            ->expects($this->any())
+            ->method('getName')
+            ->willReturn('super-serializer');
+        $s1
+            ->expects($this->any())
+            ->method('serialize')
+            ->willReturnArgument(0);
+        /** @var DataSerializerInterface $s1 */
+        $serializer->addDataSerializer($s1, -100);
+
+        $s2 = $this->getMock('Botanick\\Serializer\\Serializer\\DataSerializer\\DataSerializerInterface');
+        $s2
+            ->expects($this->any())
+            ->method('supports')
+            ->willReturn(true);
+        $s2
+            ->expects($this->never())
+            ->method('serialize');
+        /** @var DataSerializerInterface $s2 */
+        $serializer->addDataSerializer($s2, 100);
+
+        $this->assertSame(null, $serializer->serialize(null, 'default', array('$dataSerializer$' => 'super-serializer')));
+    }
+
     public function testSerializerInjectionIntoDataSerializer()
     {
         $serializer = $this->getSerializer();

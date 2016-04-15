@@ -34,8 +34,8 @@ class Serializer implements SerializerInterface, DataSerializersAwareInterface
         foreach ($this->getDataSerializers() as $dataSerializers) {
             foreach ($dataSerializers as $dataSerializer) {
                 if (
-                    $dsName && $dsName === $dataSerializer->getName()
-                    || $dataSerializer->supports($data)
+                    !is_null($dsName) && $dsName === $dataSerializer->getName()
+                    || is_null($dsName) && $dataSerializer->supports($data)
                 ) {
                     return $dataSerializer->serialize($data, $group, $options);
                 }
