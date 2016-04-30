@@ -59,7 +59,7 @@ class ObjectSerializer extends DataSerializer
      * @param object $data
      * @param string $group
      * @param mixed $options
-     * @return array|null
+     * @return mixed
      * @throws DataSerializerException
      */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
@@ -70,8 +70,11 @@ class ObjectSerializer extends DataSerializer
             return null;
         }
 
-        if (array_key_exists(self::PROP_VALUE, $config)) {
-            return $config[self::PROP_VALUE];
+        $firstOptions = reset($config);
+        if (sizeof($config) === 1 && key($config) === 0) {
+            $value = $this->getValue($data, '', $firstOptions);
+
+            return $this->getSerializer()->serialize($value, $group, $firstOptions);
         }
 
         $result = array();
