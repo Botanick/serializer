@@ -342,9 +342,12 @@ class ObjectSerializerTest extends \PHPUnit_Framework_TestCase
             array($obj, array('a' => 1, 'b' => 'b', 'null' => null, 'c' => 'c'), 4, 'default', array('default' => array('a' => null, 'b' => null, 'null' => null, 'c' => 'c'))),
             // test of $extend$ keyword
             array($obj, array('a' => 1, 'b' => 'b', 'c' => 'c'), 3, 'test2', array('test' => array('a' => null), 'test1' => array('$extends$' => 'test', 'b' => null), 'test2' => array('$extends$' => 'test1', 'c' => null))),
+            // test of $value$ keyword
+            array($obj, 'now U see me', 0, 'default', array('default' => array('$value$' => 'now U see me'))),
+            array($obj, null, 0, 'default', array('default' => array('$value$' => null))),
             // extending with skipping
             array($obj, array('a' => 1, 'c' => 'c'), 2, 'test2', array('test' => array('a' => null), 'test1' => array('$extends$' => 'test', 'b' => null), 'test2' => array('$extends$' => 'test1', 'b' => false, 'c' => 'c'))),
-            // test of $value$ keyword
+            // test of $value$ property keyword
             array($obj, array('d' => 'now U see me'), 1, 'default', array('default' => array('d' => array('$value$' => 'now U see me')))),
             array($obj, array('d' => null), 1, 'default', array('default' => array('d' => array('$value$' => null)))),
             // test of $getter$ keyword

@@ -70,6 +70,10 @@ class ObjectSerializer extends DataSerializer
             return null;
         }
 
+        if (array_key_exists(self::PROP_VALUE, $config)) {
+            return $config[self::PROP_VALUE];
+        }
+
         $result = array();
 
         foreach ($config as $prop => $propOptions) {
