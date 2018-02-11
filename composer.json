@@ -9,7 +9,7 @@
         "array"
     ],
     "homepage": "https://github.com/Botanick/serializer",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Andrey \"Botanick\" Chushikin",
